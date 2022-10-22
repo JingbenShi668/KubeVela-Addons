@@ -5625,12 +5625,7 @@ spec:
                         fsGroupChangePolicy:
                           description: 'fsGroupChangePolicy defines behavior of changing
                           ownership and permission of the volume before being exposed
-                          inside Pod. This field will only apply to volume types which
-                          support fsGroup based ownership(and permissions). It will
-                          have no effect on ephemeral volume types such as: secret,
-                          configmaps and emptydir. Valid values are "OnRootMismatch"
-                          and "Always". If not specified, "Always" is used. Note that
-                          this field cannot be set when spec.os.name is windows.'
+                          inside Pod.'
                           type: string
                         runAsGroup:
                           description: The GID to run the entrypoint of the container
@@ -10197,14 +10192,7 @@ spec:
                                             pair in the Data field of the referenced
                                             ConfigMap will be projected into the volume
                                             as a file whose name is the key and content
-                                            is the value. If specified, the listed keys
-                                            will be projected into the specified paths,
-                                            and unlisted keys will not be present. If
-                                            a key is specified which is not present
-                                            in the ConfigMap, the volume setup will
-                                            error unless it is marked optional. Paths
-                                            must be relative and may not contain the
-                                            '..' path or start with '..'.
+                                            is the value.
                                           items:
                                             description: Maps a string key to a path
                                               within a volume.
@@ -10213,18 +10201,6 @@ spec:
                                                 description: key is the key to project.
                                                 type: string
                                               mode:
-                                                description: 'mode is Optional: mode
-                                                bits used to set permissions on this
-                                                file. Must be an octal value between
-                                                0000 and 0777 or a decimal value between
-                                                0 and 511. YAML accepts both octal
-                                                and decimal values, JSON requires
-                                                decimal values for mode bits. If not
-                                                specified, the volume defaultMode
-                                                will be used. This might be in conflict
-                                                with other options that affect the
-                                                file mode, like fsGroup, and the result
-                                                can be other mode bits set.'
                                                 format: int32
                                                 type: integer
                                               path:
@@ -10280,18 +10256,6 @@ spec:
                                                   - fieldPath
                                                 type: object
                                               mode:
-                                                description: 'Optional: mode bits used
-                                                to set permissions on this file, must
-                                                be an octal value between 0000 and
-                                                0777 or a decimal value between 0
-                                                and 511. YAML accepts both octal and
-                                                decimal values, JSON requires decimal
-                                                values for mode bits. If not specified,
-                                                the volume defaultMode will be used.
-                                                This might be in conflict with other
-                                                options that affect the file mode,
-                                                like fsGroup, and the result can be
-                                                other mode bits set.'
                                                 format: int32
                                                 type: integer
                                               path:
@@ -10360,18 +10324,6 @@ spec:
                                                 description: key is the key to project.
                                                 type: string
                                               mode:
-                                                description: 'mode is Optional: mode
-                                                bits used to set permissions on this
-                                                file. Must be an octal value between
-                                                0000 and 0777 or a decimal value between
-                                                0 and 511. YAML accepts both octal
-                                                and decimal values, JSON requires
-                                                decimal values for mode bits. If not
-                                                specified, the volume defaultMode
-                                                will be used. This might be in conflict
-                                                with other options that affect the
-                                                file mode, like fsGroup, and the result
-                                                can be other mode bits set.'
                                                 format: int32
                                                 type: integer
                                               path:
@@ -10402,24 +10354,8 @@ spec:
                                         about the serviceAccountToken data to project
                                       properties:
                                         audience:
-                                          description: audience is the intended audience
-                                            of the token. A recipient of a token must
-                                            identify itself with an identifier specified
-                                            in the audience of the token, and otherwise
-                                            should reject the token. The audience defaults
-                                            to the identifier of the apiserver.
                                           type: string
                                         expirationSeconds:
-                                          description: expirationSeconds is the requested
-                                            duration of validity of the service account
-                                            token. As the token approaches expiration,
-                                            the kubelet volume plugin will proactively
-                                            rotate the service account token. The kubelet
-                                            will start trying to rotate the token if
-                                            the token is older than 80 percent of its
-                                            time to live or if the token is older than
-                                            24 hours.Defaults to 1 hour and must be
-                                            at least 10 minutes.
                                           format: int64
                                           type: integer
                                         path:
@@ -10592,26 +10528,14 @@ spec:
                                 description: 'defaultMode is Optional: mode bits used
                                 to set permissions on created files by default. Must
                                 be an octal value between 0000 and 0777 or a decimal
-                                value between 0 and 511. YAML accepts both octal and
-                                decimal values, JSON requires decimal values for mode
-                                bits. Defaults to 0644. Directories within the path
-                                are not affected by this setting. This might be in
-                                conflict with other options that affect the file mode,
-                                like fsGroup, and the result can be other mode bits
-                                set.'
+                                value between 0 and 511. '
                                 format: int32
                                 type: integer
                               items:
                                 description: items If unspecified, each key-value pair
                                   in the Data field of the referenced Secret will be
                                   projected into the volume as a file whose name is
-                                  the key and content is the value. If specified, the
-                                  listed keys will be projected into the specified paths,
-                                  and unlisted keys will not be present. If a key is
-                                  specified which is not present in the Secret, the
-                                  volume setup will error unless it is marked optional.
-                                  Paths must be relative and may not contain the '..'
-                                  path or start with '..'.
+                                  the key and content is the value.
                                 items:
                                   description: Maps a string key to a path within a
                                     volume.
@@ -10623,13 +10547,7 @@ spec:
                                       description: 'mode is Optional: mode bits used
                                       to set permissions on this file. Must be an
                                       octal value between 0000 and 0777 or a decimal
-                                      value between 0 and 511. YAML accepts both octal
-                                      and decimal values, JSON requires decimal values
-                                      for mode bits. If not specified, the volume
-                                      defaultMode will be used. This might be in conflict
-                                      with other options that affect the file mode,
-                                      like fsGroup, and the result can be other mode
-                                      bits set.'
+                                      value between 0 and 511.'
                                       format: int32
                                       type: integer
                                     path:
@@ -10748,31 +10666,14 @@ spec:
                           run within a pod.
                         properties:
                           args:
-                            description: 'Arguments to the entrypoint. The container
-                            image''s CMD is used if this is not provided. Variable
-                            references $(VAR_NAME) are expanded using the container''s
-                            environment. If a variable cannot be resolved, the reference
-                            in the input string will be unchanged. Double $$ are reduced
-                            to a single $, which allows for escaping the $(VAR_NAME)
-                            syntax: i.e. "$$(VAR_NAME)" will produce the string literal
-                            "$(VAR_NAME)". Escaped references will never be expanded,
-                            regardless of whether the variable exists or not. Cannot
-                            be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell'
+                            description: 'Arguments to the entrypoint. '
                             items:
                               type: string
                             type: array
                           command:
                             description: 'Entrypoint array. Not executed within a shell.
                             The container image''s ENTRYPOINT is used if this is not
-                            provided. Variable references $(VAR_NAME) are expanded
-                            using the container''s environment. If a variable cannot
-                            be resolved, the reference in the input string will be
-                            unchanged. Double $$ are reduced to a single $, which
-                            allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                            will produce the string literal "$(VAR_NAME)". Escaped
-                            references will never be expanded, regardless of whether
-                            the variable exists or not. Cannot be updated. More info:
-                            https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell'
+                            provided. '
                             items:
                               type: string
                             type: array
@@ -10791,14 +10692,7 @@ spec:
                                   description: 'Variable references $(VAR_NAME) are
                                   expanded using the previously defined environment
                                   variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                  variables. '
                                   type: string
                                 valueFrom:
                                   description: Source for the environment variable's
@@ -11049,15 +10943,7 @@ spec:
                                 description: 'PreStop is called immediately before a
                                 container is terminated due to an API request or management
                                 event such as liveness/startup probe failure, preemption,
-                                resource contention, etc. The handler is not called
-                                if the container crashes or exits. The Pod''s termination
-                                grace period countdown begins before the PreStop hook
-                                is executed. Regardless of the outcome of the handler,
-                                the container will eventually terminate within the
-                                Pod''s termination grace period (unless delayed by
-                                finalizers). Other management of the container blocks
-                                until the hook completes or until the termination
-                                grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks'
+                                resource contention, etc. '
                                 properties:
                                   exec:
                                     description: Exec specifies the action to take.
@@ -11275,20 +11161,7 @@ spec:
                                 type: object
                               terminationGracePeriodSeconds:
                                 description: Optional duration in seconds the pod needs
-                                  to terminate gracefully upon probe failure. The grace
-                                  period is the duration in seconds after the processes
-                                  running in the pod are sent a termination signal and
-                                  the time when the processes are forcibly halted with
-                                  a kill signal. Set this value longer than the expected
-                                  cleanup time for your process. If this value is nil,
-                                  the pod's terminationGracePeriodSeconds will be used.
-                                  Otherwise, this value overrides the value provided
-                                  by the pod spec. Value must be non-negative integer.
-                                  The value zero indicates stop immediately via the
-                                  kill signal (no opportunity to shut down). This is
-                                  a beta field and requires enabling ProbeTerminationGracePeriod
-                                  feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds
-                                  is used if unset.
+                                  to terminate gracefully upon probe failure.
                                 format: int64
                                 type: integer
                               timeoutSeconds:
@@ -11483,20 +11356,7 @@ spec:
                                 type: object
                               terminationGracePeriodSeconds:
                                 description: Optional duration in seconds the pod needs
-                                  to terminate gracefully upon probe failure. The grace
-                                  period is the duration in seconds after the processes
-                                  running in the pod are sent a termination signal and
-                                  the time when the processes are forcibly halted with
-                                  a kill signal. Set this value longer than the expected
-                                  cleanup time for your process. If this value is nil,
-                                  the pod's terminationGracePeriodSeconds will be used.
-                                  Otherwise, this value overrides the value provided
-                                  by the pod spec. Value must be non-negative integer.
-                                  The value zero indicates stop immediately via the
-                                  kill signal (no opportunity to shut down). This is
-                                  a beta field and requires enabling ProbeTerminationGracePeriod
-                                  feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds
-                                  is used if unset.
+                                  to terminate gracefully upon probe failure.
                                 format: int64
                                 type: integer
                               timeoutSeconds:
@@ -11543,11 +11403,7 @@ spec:
                               allowPrivilegeEscalation:
                                 description: 'AllowPrivilegeEscalation controls whether
                                 a process can gain more privileges than its parent
-                                process. This bool directly controls if the no_new_privs
-                                flag will be set on the container process. AllowPrivilegeEscalation
-                                is true always when the container is: 1) run as Privileged
-                                2) has CAP_SYS_ADMIN Note that this field cannot be
-                                set when spec.os.name is windows.'
+                                process. '
                                 type: boolean
                               capabilities:
                                 description: The capabilities to add/drop when running
@@ -11691,16 +11547,7 @@ spec:
                                     type: string
                                   hostProcess:
                                     description: HostProcess determines if a container
-                                      should be run as a 'Host Process' container. This
-                                      field is alpha-level and will only be honored
-                                      by components that enable the WindowsHostProcessContainers
-                                      feature flag. Setting this field without the feature
-                                      flag will result in errors when validating the
-                                      Pod. All of a Pod's containers must have the same
-                                      effective HostProcess value (it is not allowed
-                                      to have a mix of HostProcess containers and non-HostProcess
-                                      containers).  In addition, if HostProcess is true
-                                      then HostNetwork must also be set to true.
+                                      should be run as a 'Host Process' container.
                                     type: boolean
                                   runAsUserName:
                                     description: The UserName in Windows to run the
@@ -11714,14 +11561,7 @@ spec:
                             type: object
                           startupProbe:
                             description: 'StartupProbe indicates that the Pod has successfully
-                            initialized. If specified, no other probes are executed
-                            until this completes successfully. If this probe fails,
-                            the Pod will be restarted, just as if the livenessProbe
-                            failed. This can be used to provide different probe parameters
-                            at the beginning of a Pod''s lifecycle, when it might
-                            take a long time to load data or warm a cache, than during
-                            steady-state operation. This cannot be updated. More info:
-                            https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes'
+                            initialized. '
                             properties:
                               exec:
                                 description: Exec specifies the action to take.
@@ -11848,20 +11688,7 @@ spec:
                                 type: object
                               terminationGracePeriodSeconds:
                                 description: Optional duration in seconds the pod needs
-                                  to terminate gracefully upon probe failure. The grace
-                                  period is the duration in seconds after the processes
-                                  running in the pod are sent a termination signal and
-                                  the time when the processes are forcibly halted with
-                                  a kill signal. Set this value longer than the expected
-                                  cleanup time for your process. If this value is nil,
-                                  the pod's terminationGracePeriodSeconds will be used.
-                                  Otherwise, this value overrides the value provided
-                                  by the pod spec. Value must be non-negative integer.
-                                  The value zero indicates stop immediately via the
-                                  kill signal (no opportunity to shut down). This is
-                                  a beta field and requires enabling ProbeTerminationGracePeriod
-                                  feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds
-                                  is used if unset.
+                                  to terminate gracefully upon probe failure.
                                 format: int64
                                 type: integer
                               timeoutSeconds:
@@ -11880,35 +11707,14 @@ spec:
                           stdinOnce:
                             description: Whether the container runtime should close
                               the stdin channel after it has been opened by a single
-                              attach. When stdin is true the stdin stream will remain
-                              open across multiple attach sessions. If stdinOnce is
-                              set to true, stdin is opened on container start, is empty
-                              until the first client attaches to stdin, and then remains
-                              open and accepts data until the client disconnects, at
-                              which time stdin is closed and remains closed until the
-                              container is restarted. If this flag is false, a container
-                              processes that reads from stdin will never receive an
-                              EOF. Default is false
+                              attach.
                             type: boolean
                           terminationMessagePath:
-                            description: 'Optional: Path at which the file to which
-                            the container''s termination message will be written is
-                            mounted into the container''s filesystem. Message written
-                            is intended to be brief final status, such as an assertion
-                            failure message. Will be truncated by the node if greater
-                            than 4096 bytes. The total message length across all containers
-                            will be limited to 12kb. Defaults to /dev/termination-log.
-                            Cannot be updated.'
+                            description: ''
                             type: string
                           terminationMessagePolicy:
                             description: Indicate how the termination message should
-                              be populated. File will use the contents of terminationMessagePath
-                              to populate the container status message on both success
-                              and failure. FallbackToLogsOnError will use the last chunk
-                              of container log output if the termination message file
-                              is empty and the container exited with an error. The log
-                              output is limited to 2048 bytes or 80 lines, whichever
-                              is smaller. Defaults to File. Cannot be updated.
+                              be populated.
                             type: string
                           tty:
                             description: Whether this container should allocate a TTY
@@ -12034,25 +11840,13 @@ spec:
                       properties:
                         fsGroup:
                           description: "A special supplemental group that applies to
-                          all containers in a pod. Some volume types allow the Kubelet
-                          to change the ownership of that volume to be owned by the
-                          pod: \n 1. The owning GID will be the FSGroup 2. The setgid
-                          bit is set (new files created in the volume will be owned
-                          by FSGroup) 3. The permission bits are OR'd with rw-rw----
-                          \n If unset, the Kubelet will not modify the ownership and
-                          permissions of any volume. Note that this field cannot be
-                          set when spec.os.name is windows."
+                          all containers in a pod. "
                           format: int64
                           type: integer
                         fsGroupChangePolicy:
                           description: 'fsGroupChangePolicy defines behavior of changing
                           ownership and permission of the volume before being exposed
-                          inside Pod. This field will only apply to volume types which
-                          support fsGroup based ownership(and permissions). It will
-                          have no effect on ephemeral volume types such as: secret,
-                          configmaps and emptydir. Valid values are "OnRootMismatch"
-                          and "Always". If not specified, "Always" is used. Note that
-                          this field cannot be set when spec.os.name is windows.'
+                          inside Pod. '
                           type: string
                         runAsGroup:
                           description: The GID to run the entrypoint of the container
@@ -12065,12 +11859,7 @@ spec:
                           type: integer
                         runAsNonRoot:
                           description: Indicates that the container must run as a non-root
-                            user. If true, the Kubelet will validate the image at runtime
-                            to ensure that it does not run as UID 0 (root) and fail
-                            to start the container if it does. If unset or false, no
-                            such validation will be performed. May also be set in SecurityContext.  If
-                            set in both SecurityContext and PodSecurityContext, the
-                            value specified in SecurityContext takes precedence.
+                            user.
                           type: boolean
                         runAsUser:
                           description: The UID to run the entrypoint of the container
@@ -12299,82 +12088,22 @@ spec:
                             type: object
                           maxSkew:
                             description: 'MaxSkew describes the degree to which pods
-                            may be unevenly distributed. When `whenUnsatisfiable=DoNotSchedule`,
-                            it is the maximum permitted difference between the number
-                            of matching pods in the target topology and the global
-                            minimum. The global minimum is the minimum number of matching
-                            pods in an eligible domain or zero if the number of eligible
-                            domains is less than MinDomains. For example, in a 3-zone
-                            cluster, MaxSkew is set to 1, and pods with the same labelSelector
-                            spread as 2/2/1: In this case, the global minimum is 1.
-                            | zone1 | zone2 | zone3 | |  P P  |  P P  |   P   | -
-                            if MaxSkew is 1, incoming pod can only be scheduled to
-                            zone3 to become 2/2/2; scheduling it onto zone1(zone2)
-                            would make the ActualSkew(3-1) on zone1(zone2) violate
-                            MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled
-                            onto any zone. When `whenUnsatisfiable=ScheduleAnyway`,
-                            it is used to give higher precedence to topologies that
-                            satisfy it. It''s a required field. Default value is 1
-                            and 0 is not allowed.'
+                            may be unevenly distributed. '
                             format: int32
                             type: integer
                           minDomains:
                             description: "MinDomains indicates a minimum number of eligible
-                            domains. When the number of eligible domains with matching
-                            topology keys is less than minDomains, Pod Topology Spread
-                            treats \"global minimum\" as 0, and then the calculation
-                            of Skew is performed. And when the number of eligible
-                            domains with matching topology keys equals or greater
-                            than minDomains, this value has no effect on scheduling.
-                            As a result, when the number of eligible domains is less
-                            than minDomains, scheduler won't schedule more than maxSkew
-                            Pods to those domains. If value is nil, the constraint
-                            behaves as if MinDomains is equal to 1. Valid values are
-                            integers greater than 0. When value is not nil, WhenUnsatisfiable
-                            must be DoNotSchedule. \n For example, in a 3-zone cluster,
-                            MaxSkew is set to 2, MinDomains is set to 5 and pods with
-                            the same labelSelector spread as 2/2/2: | zone1 | zone2
-                            | zone3 | |  P P  |  P P  |  P P  | The number of domains
-                            is less than 5(MinDomains), so \"global minimum\" is treated
-                            as 0. In this situation, new pod with the same labelSelector
-                            cannot be scheduled, because computed skew will be 3(3
-                            - 0) if new Pod is scheduled to any of the three zones,
-                            it will violate MaxSkew. \n This is an alpha field and
-                            requires enabling MinDomainsInPodTopologySpread feature
-                            gate."
+                              domains."
                             format: int32
                             type: integer
                           topologyKey:
                             description: TopologyKey is the key of node labels. Nodes
                               that have a label with this key and identical values are
-                              considered to be in the same topology. We consider each
-                              <key, value> as a "bucket", and try to put balanced number
-                              of pods into each bucket. We define a domain as a particular
-                              instance of a topology. Also, we define an eligible domain
-                              as a domain whose nodes match the node selector. e.g.
-                              If TopologyKey is "kubernetes.io/hostname", each Node
-                              is a domain of that topology. And, if TopologyKey is "topology.kubernetes.io/zone",
-                              each zone is a domain of that topology. It's a required
-                              field.
+                              considered to be in the same topology.
                             type: string
                           whenUnsatisfiable:
                             description: 'WhenUnsatisfiable indicates how to deal with
-                            a pod if it doesn''t satisfy the spread constraint. -
-                            DoNotSchedule (default) tells the scheduler not to schedule
-                            it. - ScheduleAnyway tells the scheduler to schedule the
-                            pod in any location,   but giving higher precedence to
-                            topologies that would help reduce the   skew. A constraint
-                            is considered "Unsatisfiable" for an incoming pod if and
-                            only if every possible node assignment for that pod would
-                            violate "MaxSkew" on some topology. For example, in a
-                            3-zone cluster, MaxSkew is set to 1, and pods with the
-                            same labelSelector spread as 3/1/1: | zone1 | zone2 |
-                            zone3 | | P P P |   P   |   P   | If WhenUnsatisfiable
-                            is set to DoNotSchedule, incoming pod can only be scheduled
-                            to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1)
-                            on zone2(zone3) satisfies MaxSkew(1). In other words,
-                            the cluster can still be imbalanced, but scheduler won''t
-                            make it *more* imbalanced. It''s a required field.'
+                            a pod if it doesn''t satisfy the spread constraint.
                             type: string
                         required:
                           - maxSkew
