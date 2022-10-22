@@ -5625,7 +5625,12 @@ spec:
                         fsGroupChangePolicy:
                           description: 'fsGroupChangePolicy defines behavior of changing
                           ownership and permission of the volume before being exposed
-                          inside Pod.'
+                          inside Pod. This field will only apply to volume types which
+                          support fsGroup based ownership(and permissions). It will
+                          have no effect on ephemeral volume types such as: secret,
+                          configmaps and emptydir. Valid values are "OnRootMismatch"
+                          and "Always". If not specified, "Always" is used. Note that
+                          this field cannot be set when spec.os.name is windows.'
                           type: string
                         runAsGroup:
                           description: The GID to run the entrypoint of the container
@@ -10192,7 +10197,14 @@ spec:
                                             pair in the Data field of the referenced
                                             ConfigMap will be projected into the volume
                                             as a file whose name is the key and content
-                                            is the value.
+                                            is the value. If specified, the listed keys
+                                            will be projected into the specified paths,
+                                            and unlisted keys will not be present. If
+                                            a key is specified which is not present
+                                            in the ConfigMap, the volume setup will
+                                            error unless it is marked optional. Paths
+                                            must be relative and may not contain the
+                                            '..' path or start with '..'.
                                           items:
                                             description: Maps a string key to a path
                                               within a volume.
@@ -10201,6 +10213,18 @@ spec:
                                                 description: key is the key to project.
                                                 type: string
                                               mode:
+                                                description: 'mode is Optional: mode
+                                                bits used to set permissions on this
+                                                file. Must be an octal value between
+                                                0000 and 0777 or a decimal value between
+                                                0 and 511. YAML accepts both octal
+                                                and decimal values, JSON requires
+                                                decimal values for mode bits. If not
+                                                specified, the volume defaultMode
+                                                will be used. This might be in conflict
+                                                with other options that affect the
+                                                file mode, like fsGroup, and the result
+                                                can be other mode bits set.'
                                                 format: int32
                                                 type: integer
                                               path:
@@ -10256,6 +10280,18 @@ spec:
                                                   - fieldPath
                                                 type: object
                                               mode:
+                                                description: 'Optional: mode bits used
+                                                to set permissions on this file, must
+                                                be an octal value between 0000 and
+                                                0777 or a decimal value between 0
+                                                and 511. YAML accepts both octal and
+                                                decimal values, JSON requires decimal
+                                                values for mode bits. If not specified,
+                                                the volume defaultMode will be used.
+                                                This might be in conflict with other
+                                                options that affect the file mode,
+                                                like fsGroup, and the result can be
+                                                other mode bits set.'
                                                 format: int32
                                                 type: integer
                                               path:
@@ -10324,6 +10360,18 @@ spec:
                                                 description: key is the key to project.
                                                 type: string
                                               mode:
+                                                description: 'mode is Optional: mode
+                                                bits used to set permissions on this
+                                                file. Must be an octal value between
+                                                0000 and 0777 or a decimal value between
+                                                0 and 511. YAML accepts both octal
+                                                and decimal values, JSON requires
+                                                decimal values for mode bits. If not
+                                                specified, the volume defaultMode
+                                                will be used. This might be in conflict
+                                                with other options that affect the
+                                                file mode, like fsGroup, and the result
+                                                can be other mode bits set.'
                                                 format: int32
                                                 type: integer
                                               path:
@@ -10354,8 +10402,24 @@ spec:
                                         about the serviceAccountToken data to project
                                       properties:
                                         audience:
+                                          description: audience is the intended audience
+                                            of the token. A recipient of a token must
+                                            identify itself with an identifier specified
+                                            in the audience of the token, and otherwise
+                                            should reject the token. The audience defaults
+                                            to the identifier of the apiserver.
                                           type: string
                                         expirationSeconds:
+                                          description: expirationSeconds is the requested
+                                            duration of validity of the service account
+                                            token. As the token approaches expiration,
+                                            the kubelet volume plugin will proactively
+                                            rotate the service account token. The kubelet
+                                            will start trying to rotate the token if
+                                            the token is older than 80 percent of its
+                                            time to live or if the token is older than
+                                            24 hours.Defaults to 1 hour and must be
+                                            at least 10 minutes.
                                           format: int64
                                           type: integer
                                         path:
@@ -10528,14 +10592,26 @@ spec:
                                 description: 'defaultMode is Optional: mode bits used
                                 to set permissions on created files by default. Must
                                 be an octal value between 0000 and 0777 or a decimal
-                                value between 0 and 511. '
+                                value between 0 and 511. YAML accepts both octal and
+                                decimal values, JSON requires decimal values for mode
+                                bits. Defaults to 0644. Directories within the path
+                                are not affected by this setting. This might be in
+                                conflict with other options that affect the file mode,
+                                like fsGroup, and the result can be other mode bits
+                                set.'
                                 format: int32
                                 type: integer
                               items:
                                 description: items If unspecified, each key-value pair
                                   in the Data field of the referenced Secret will be
                                   projected into the volume as a file whose name is
-                                  the key and content is the value.
+                                  the key and content is the value. If specified, the
+                                  listed keys will be projected into the specified paths,
+                                  and unlisted keys will not be present. If a key is
+                                  specified which is not present in the Secret, the
+                                  volume setup will error unless it is marked optional.
+                                  Paths must be relative and may not contain the '..'
+                                  path or start with '..'.
                                 items:
                                   description: Maps a string key to a path within a
                                     volume.
@@ -10547,7 +10623,13 @@ spec:
                                       description: 'mode is Optional: mode bits used
                                       to set permissions on this file. Must be an
                                       octal value between 0000 and 0777 or a decimal
-                                      value between 0 and 511.'
+                                      value between 0 and 511. YAML accepts both octal
+                                      and decimal values, JSON requires decimal values
+                                      for mode bits. If not specified, the volume
+                                      defaultMode will be used. This might be in conflict
+                                      with other options that affect the file mode,
+                                      like fsGroup, and the result can be other mode
+                                      bits set.'
                                       format: int32
                                       type: integer
                                     path:
@@ -10666,14 +10748,31 @@ spec:
                           run within a pod.
                         properties:
                           args:
-                            description: 'Arguments to the entrypoint. '
+                            description: 'Arguments to the entrypoint. The container
+                            image''s CMD is used if this is not provided. Variable
+                            references $(VAR_NAME) are expanded using the container''s
+                            environment. If a variable cannot be resolved, the reference
+                            in the input string will be unchanged. Double $$ are reduced
+                            to a single $, which allows for escaping the $(VAR_NAME)
+                            syntax: i.e. "$$(VAR_NAME)" will produce the string literal
+                            "$(VAR_NAME)". Escaped references will never be expanded,
+                            regardless of whether the variable exists or not. Cannot
+                            be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell'
                             items:
                               type: string
                             type: array
                           command:
                             description: 'Entrypoint array. Not executed within a shell.
                             The container image''s ENTRYPOINT is used if this is not
-                            provided. '
+                            provided. Variable references $(VAR_NAME) are expanded
+                            using the container''s environment. If a variable cannot
+                            be resolved, the reference in the input string will be
+                            unchanged. Double $$ are reduced to a single $, which
+                            allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
+                            will produce the string literal "$(VAR_NAME)". Escaped
+                            references will never be expanded, regardless of whether
+                            the variable exists or not. Cannot be updated. More info:
+                            https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell'
                             items:
                               type: string
                             type: array
@@ -10692,7 +10791,14 @@ spec:
                                   description: 'Variable references $(VAR_NAME) are
                                   expanded using the previously defined environment
                                   variables in the container and any service environment
-                                  variables. '
+                                  variables. If a variable cannot be resolved, the
+                                  reference in the input string will be unchanged.
+                                  Double $$ are reduced to a single $, which allows
+                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
+                                  will produce the string literal "$(VAR_NAME)". Escaped
+                                  references will never be expanded, regardless of
+                                  whether the variable exists or not. Defaults to
+                                  "".'
                                   type: string
                                 valueFrom:
                                   description: Source for the environment variable's
@@ -10943,7 +11049,15 @@ spec:
                                 description: 'PreStop is called immediately before a
                                 container is terminated due to an API request or management
                                 event such as liveness/startup probe failure, preemption,
-                                resource contention, etc. '
+                                resource contention, etc. The handler is not called
+                                if the container crashes or exits. The Pod''s termination
+                                grace period countdown begins before the PreStop hook
+                                is executed. Regardless of the outcome of the handler,
+                                the container will eventually terminate within the
+                                Pod''s termination grace period (unless delayed by
+                                finalizers). Other management of the container blocks
+                                until the hook completes or until the termination
+                                grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks'
                                 properties:
                                   exec:
                                     description: Exec specifies the action to take.
@@ -11161,7 +11275,20 @@ spec:
                                 type: object
                               terminationGracePeriodSeconds:
                                 description: Optional duration in seconds the pod needs
-                                  to terminate gracefully upon probe failure.
+                                  to terminate gracefully upon probe failure. The grace
+                                  period is the duration in seconds after the processes
+                                  running in the pod are sent a termination signal and
+                                  the time when the processes are forcibly halted with
+                                  a kill signal. Set this value longer than the expected
+                                  cleanup time for your process. If this value is nil,
+                                  the pod's terminationGracePeriodSeconds will be used.
+                                  Otherwise, this value overrides the value provided
+                                  by the pod spec. Value must be non-negative integer.
+                                  The value zero indicates stop immediately via the
+                                  kill signal (no opportunity to shut down). This is
+                                  a beta field and requires enabling ProbeTerminationGracePeriod
+                                  feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds
+                                  is used if unset.
                                 format: int64
                                 type: integer
                               timeoutSeconds:
@@ -11356,7 +11483,20 @@ spec:
                                 type: object
                               terminationGracePeriodSeconds:
                                 description: Optional duration in seconds the pod needs
-                                  to terminate gracefully upon probe failure.
+                                  to terminate gracefully upon probe failure. The grace
+                                  period is the duration in seconds after the processes
+                                  running in the pod are sent a termination signal and
+                                  the time when the processes are forcibly halted with
+                                  a kill signal. Set this value longer than the expected
+                                  cleanup time for your process. If this value is nil,
+                                  the pod's terminationGracePeriodSeconds will be used.
+                                  Otherwise, this value overrides the value provided
+                                  by the pod spec. Value must be non-negative integer.
+                                  The value zero indicates stop immediately via the
+                                  kill signal (no opportunity to shut down). This is
+                                  a beta field and requires enabling ProbeTerminationGracePeriod
+                                  feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds
+                                  is used if unset.
                                 format: int64
                                 type: integer
                               timeoutSeconds:
@@ -11403,7 +11543,11 @@ spec:
                               allowPrivilegeEscalation:
                                 description: 'AllowPrivilegeEscalation controls whether
                                 a process can gain more privileges than its parent
-                                process. '
+                                process. This bool directly controls if the no_new_privs
+                                flag will be set on the container process. AllowPrivilegeEscalation
+                                is true always when the container is: 1) run as Privileged
+                                2) has CAP_SYS_ADMIN Note that this field cannot be
+                                set when spec.os.name is windows.'
                                 type: boolean
                               capabilities:
                                 description: The capabilities to add/drop when running
@@ -11547,7 +11691,16 @@ spec:
                                     type: string
                                   hostProcess:
                                     description: HostProcess determines if a container
-                                      should be run as a 'Host Process' container.
+                                      should be run as a 'Host Process' container. This
+                                      field is alpha-level and will only be honored
+                                      by components that enable the WindowsHostProcessContainers
+                                      feature flag. Setting this field without the feature
+                                      flag will result in errors when validating the
+                                      Pod. All of a Pod's containers must have the same
+                                      effective HostProcess value (it is not allowed
+                                      to have a mix of HostProcess containers and non-HostProcess
+                                      containers).  In addition, if HostProcess is true
+                                      then HostNetwork must also be set to true.
                                     type: boolean
                                   runAsUserName:
                                     description: The UserName in Windows to run the
@@ -11561,7 +11714,14 @@ spec:
                             type: object
                           startupProbe:
                             description: 'StartupProbe indicates that the Pod has successfully
-                            initialized. '
+                            initialized. If specified, no other probes are executed
+                            until this completes successfully. If this probe fails,
+                            the Pod will be restarted, just as if the livenessProbe
+                            failed. This can be used to provide different probe parameters
+                            at the beginning of a Pod''s lifecycle, when it might
+                            take a long time to load data or warm a cache, than during
+                            steady-state operation. This cannot be updated. More info:
+                            https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes'
                             properties:
                               exec:
                                 description: Exec specifies the action to take.
@@ -11688,7 +11848,20 @@ spec:
                                 type: object
                               terminationGracePeriodSeconds:
                                 description: Optional duration in seconds the pod needs
-                                  to terminate gracefully upon probe failure.
+                                  to terminate gracefully upon probe failure. The grace
+                                  period is the duration in seconds after the processes
+                                  running in the pod are sent a termination signal and
+                                  the time when the processes are forcibly halted with
+                                  a kill signal. Set this value longer than the expected
+                                  cleanup time for your process. If this value is nil,
+                                  the pod's terminationGracePeriodSeconds will be used.
+                                  Otherwise, this value overrides the value provided
+                                  by the pod spec. Value must be non-negative integer.
+                                  The value zero indicates stop immediately via the
+                                  kill signal (no opportunity to shut down). This is
+                                  a beta field and requires enabling ProbeTerminationGracePeriod
+                                  feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds
+                                  is used if unset.
                                 format: int64
                                 type: integer
                               timeoutSeconds:
@@ -11707,14 +11880,35 @@ spec:
                           stdinOnce:
                             description: Whether the container runtime should close
                               the stdin channel after it has been opened by a single
-                              attach.
+                              attach. When stdin is true the stdin stream will remain
+                              open across multiple attach sessions. If stdinOnce is
+                              set to true, stdin is opened on container start, is empty
+                              until the first client attaches to stdin, and then remains
+                              open and accepts data until the client disconnects, at
+                              which time stdin is closed and remains closed until the
+                              container is restarted. If this flag is false, a container
+                              processes that reads from stdin will never receive an
+                              EOF. Default is false
                             type: boolean
                           terminationMessagePath:
-                            description: ''
+                            description: 'Optional: Path at which the file to which
+                            the container''s termination message will be written is
+                            mounted into the container''s filesystem. Message written
+                            is intended to be brief final status, such as an assertion
+                            failure message. Will be truncated by the node if greater
+                            than 4096 bytes. The total message length across all containers
+                            will be limited to 12kb. Defaults to /dev/termination-log.
+                            Cannot be updated.'
                             type: string
                           terminationMessagePolicy:
                             description: Indicate how the termination message should
-                              be populated.
+                              be populated. File will use the contents of terminationMessagePath
+                              to populate the container status message on both success
+                              and failure. FallbackToLogsOnError will use the last chunk
+                              of container log output if the termination message file
+                              is empty and the container exited with an error. The log
+                              output is limited to 2048 bytes or 80 lines, whichever
+                              is smaller. Defaults to File. Cannot be updated.
                             type: string
                           tty:
                             description: Whether this container should allocate a TTY
@@ -11840,13 +12034,25 @@ spec:
                       properties:
                         fsGroup:
                           description: "A special supplemental group that applies to
-                          all containers in a pod. "
+                          all containers in a pod. Some volume types allow the Kubelet
+                          to change the ownership of that volume to be owned by the
+                          pod: \n 1. The owning GID will be the FSGroup 2. The setgid
+                          bit is set (new files created in the volume will be owned
+                          by FSGroup) 3. The permission bits are OR'd with rw-rw----
+                          \n If unset, the Kubelet will not modify the ownership and
+                          permissions of any volume. Note that this field cannot be
+                          set when spec.os.name is windows."
                           format: int64
                           type: integer
                         fsGroupChangePolicy:
                           description: 'fsGroupChangePolicy defines behavior of changing
                           ownership and permission of the volume before being exposed
-                          inside Pod. '
+                          inside Pod. This field will only apply to volume types which
+                          support fsGroup based ownership(and permissions). It will
+                          have no effect on ephemeral volume types such as: secret,
+                          configmaps and emptydir. Valid values are "OnRootMismatch"
+                          and "Always". If not specified, "Always" is used. Note that
+                          this field cannot be set when spec.os.name is windows.'
                           type: string
                         runAsGroup:
                           description: The GID to run the entrypoint of the container
@@ -11859,7 +12065,12 @@ spec:
                           type: integer
                         runAsNonRoot:
                           description: Indicates that the container must run as a non-root
-                            user.
+                            user. If true, the Kubelet will validate the image at runtime
+                            to ensure that it does not run as UID 0 (root) and fail
+                            to start the container if it does. If unset or false, no
+                            such validation will be performed. May also be set in SecurityContext.  If
+                            set in both SecurityContext and PodSecurityContext, the
+                            value specified in SecurityContext takes precedence.
                           type: boolean
                         runAsUser:
                           description: The UID to run the entrypoint of the container
@@ -12001,30 +12212,16 @@ spec:
                           the matching operator <operator>.
                         properties:
                           effect:
-                            description: Effect indicates the taint effect to match.
-                              Empty means match all taint effects. When specified, allowed
-                              values are NoSchedule, PreferNoSchedule and NoExecute.
+                            description: ''
                             type: string
                           key:
-                            description: Key is the taint key that the toleration applies
-                              to. Empty means match all taint keys. If the key is empty,
-                              operator must be Exists; this combination means to match
-                              all values and all keys.
+                            description: ''
                             type: string
                           operator:
-                            description: Operator represents a key's relationship to
-                              the value. Valid operators are Exists and Equal. Defaults
-                              to Equal. Exists is equivalent to wildcard for value,
-                              so that a pod can tolerate all taints of a particular
-                              category.
+                            description: ''
                             type: string
                           tolerationSeconds:
-                            description: TolerationSeconds represents the period of
-                              time the toleration (which must be of effect NoExecute,
-                              otherwise this field is ignored) tolerates the taint.
-                              By default, it is not set, which means tolerate the taint
-                              forever (do not evict). Zero and negative values will
-                              be treated as 0 (evict immediately) by the system.
+                            description: ''
                             format: int64
                             type: integer
                           value:
@@ -12062,12 +12259,7 @@ spec:
                                         NotIn, Exists and DoesNotExist.
                                       type: string
                                     values:
-                                      description: values is an array of string values.
-                                        If the operator is In or NotIn, the values array
-                                        must be non-empty. If the operator is Exists
-                                        or DoesNotExist, the values array must be empty.
-                                        This array is replaced during a strategic merge
-                                        patch.
+                                      description: ''
                                       items:
                                         type: string
                                       type: array
@@ -12079,31 +12271,22 @@ spec:
                               matchLabels:
                                 additionalProperties:
                                   type: string
-                                description: matchLabels is a map of {key,value} pairs.
-                                  A single {key,value} in the matchLabels map is equivalent
-                                  to an element of matchExpressions, whose key field
-                                  is "key", the operator is "In", and the values array
-                                  contains only "value". The requirements are ANDed.
+                                description: ''
                                 type: object
                             type: object
                           maxSkew:
-                            description: 'MaxSkew describes the degree to which pods
-                            may be unevenly distributed. '
+                            description: ''
                             format: int32
                             type: integer
                           minDomains:
-                            description: "MinDomains indicates a minimum number of eligible
-                              domains."
+                            description: ''
                             format: int32
                             type: integer
                           topologyKey:
-                            description: TopologyKey is the key of node labels. Nodes
-                              that have a label with this key and identical values are
-                              considered to be in the same topology.
+                            description: ''
                             type: string
                           whenUnsatisfiable:
-                            description: 'WhenUnsatisfiable indicates how to deal with
-                            a pod if it doesn''t satisfy the spread constraint.
+                            description: ''
                             type: string
                         required:
                           - maxSkew
