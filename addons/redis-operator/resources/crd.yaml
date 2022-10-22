@@ -11441,8 +11441,7 @@ spec:
                                 format: int64
                                 type: integer
                               seLinuxOptions:
-                                description: ''
-                                  windows.
+                                description:''
                                 properties:
                                   level:
                                     description: Level is SELinux level label that applies
