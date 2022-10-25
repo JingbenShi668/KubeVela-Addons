@@ -18,40 +18,41 @@ template: {
             provisioner:       parameter.provisioner
             volumeBindingMode: "WaitForFirstConsumer"
     }
-	outputs: mariadb{
-	    apiVersion: "apps/v1"
-        kind:       "Deployment"
-        "metadata":{
-                name:      parameter.name
-                namespace: parameter.namespace
-        }
+	outputs:
+	    "mariadb":{
+            apiVersion: "apps/v1"
+            kind:       "Deployment"
+            "metadata":{
+                    name:      parameter.name
+                    namespace: parameter.namespace
+            }
 
-        spec: {
-               replicas: 1
-                selector: matchLabels: name: "mariadb-operator"
-                template: {
-                    metadata: labels: name: "mariadb-operator"
-                    spec: {
-                        containers: [{
-                            name: "mariadb-operator"
-                            env: [{
-                                name: "WATCH_NAMESPACE"
-                                valueFrom: fieldRef: fieldPath: parameter.namespace
-                            }, {
-                                name: "POD_NAME"
-                                valueFrom: fieldRef: fieldPath: parameter.podname
-                            }, {
-                                name:  "OPERATOR_NAME"
-                                value: "mariadb-operator"
+            spec: {
+                   replicas: 1
+                    selector: matchLabels: name: "mariadb-operator"
+                    template: {
+                        metadata: labels: name: "mariadb-operator"
+                        spec: {
+                            containers: [{
+                                name: "mariadb-operator"
+                                env: [{
+                                    name: "WATCH_NAMESPACE"
+                                    valueFrom: fieldRef: fieldPath: parameter.namespace
+                                }, {
+                                    name: "POD_NAME"
+                                    valueFrom: fieldRef: fieldPath: parameter.podname
+                                }, {
+                                    name:  "OPERATOR_NAME"
+                                    value: "mariadb-operator"
+                                }]
+                                command: ["mariadb-operator"]
+                                image: "quay.io/manojdhanorkar/mariadb-operator:v0.0.4"
+                                imagePullPolicy: "Always"
                             }]
-                            command: ["mariadb-operator"]
-                            image: "quay.io/manojdhanorkar/mariadb-operator:v0.0.4"
-                            imagePullPolicy: "Always"
-                        }]
-                        serviceAccountName: "mariadb-operator"
+                            serviceAccountName: "mariadb-operator"
+                        }
                     }
-                }
-        }
+            }
 	}
 	parameter: {
 	    scname:*"maridb-sc"|string
