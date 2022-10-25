@@ -1,4 +1,4 @@
-"mariadb-operator": {
+"mariadb": {
 	alias: ""
 	annotations: {}
 	attributes: workload: definition: {
@@ -19,7 +19,7 @@ template: {
             volumeBindingMode: "WaitForFirstConsumer"
     }
 	outputs:
-	    "mariadb":{
+	    "mariadb-demo":{
             apiVersion: "mariadb.persistentsys/v1alpha1"
             kind:       "MariaDB"
             "metadata":{
@@ -28,10 +28,9 @@ template: {
             }
 
             spec: {
-                   replicas: 1
-                    selector: matchLabels: name: "mariadb-operator"
+                    replicas: 1
                     template: {
-                        metadata: labels: name: "mariadb-operator"
+                        metadata: labels: name: "mariadb"
                         spec: {
                               database: "test-db"
                               username: "db-user"
@@ -44,11 +43,42 @@ template: {
                         }
                     }
             }
-	}
+	    }
+
+	    "mariadb-pv": {
+              apiVersion: "v1"
+              kind:       "PersistentVolume"
+              metadata: name: parameter.pvname
+              spec: {
+                      storageClassName: parameter.scname
+                      accessModes: ["ReadWriteOnce"]
+                      capacity: storage: parameter.storage
+                      hostPath: path:    "/mnt/mariadb-data"
+              }
+        }
+
+        "mariadb-pv": {
+              apiVersion: "v1"
+              kind:       "PersistentVolumeClaim"
+              metadata: name: parameter.pvcname
+              spec: {
+                      storageClassName: parameter.scname
+                      accessModes: ["ReadWriteOnce"]
+                      capacity: storage: parameter.storage
+                      volumeName: parameter.volumename
+              }
+        }
+
 	parameter: {
 	    scname:*"maridb-sc"|string
         provisioner:*"kubernetes.io/no-provisioner"|string
         storagepath:*"/mnt/mariadbdata"|string
+
+        pvname:*"mariadb-pv-volume"|string
+        pvcname:*"mariadb-pv-claim"|string
+
+        volumename:*"mariadb-pv-volume"|string
+
         podname: *"mariadb-pod"|string
         name:*"mariadb-operator"|string
 	}
