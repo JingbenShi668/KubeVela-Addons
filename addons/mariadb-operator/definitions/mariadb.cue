@@ -54,6 +54,11 @@ template: {
         }
 	}
 	parameter: {
+	    scname:*"maridb-sc"|string
+        provisioner:*"kubernetes.io/no-provisioner"|string
 
+        podname: *"mariadb-pod"|string
+
+        name:*"mariadb-operator"|string
 	}
 }
