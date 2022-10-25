@@ -60,6 +60,5 @@ template: {
         podname: *"mariadb-pod"|string
 
         name:*"mariadb-operator"|string
-        namespace:*"vela-system"|string
 	}
 }
