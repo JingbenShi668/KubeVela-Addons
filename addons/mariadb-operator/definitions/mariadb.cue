@@ -2,8 +2,8 @@
 	alias: ""
 	annotations: {}
 	attributes: workload: definition: {
-		apiVersion: "<change me> apps/v1"
-		kind:       "<change me> Deployment"
+		apiVersion: "apps/v1"
+		kind:       "Deployment"
 	}
 	description: ""
 	labels: {}
@@ -11,37 +11,53 @@
 }
 
 template: {
-	output: {
-		metadata: name: "mariadb-operator"
-		spec: {
-			replicas: 1
-			selector: matchLabels: name: "mariadb-operator"
-			template: {
-				metadata: labels: name: "mariadb-operator"
-				spec: {
-					containers: [{
-						name: "mariadb-operator"
-						env: [{
-							name: "WATCH_NAMESPACE"
-							valueFrom: fieldRef: fieldPath: "metadata.namespace"
-						}, {
-							name: "POD_NAME"
-							valueFrom: fieldRef: fieldPath: "metadata.name"
-						}, {
-							name:  "OPERATOR_NAME"
-							value: "mariadb-operator"
-						}]
-						command: ["mariadb-operator"]
-						image:           "quay.io/manojdhanorkar/mariadb-operator:v0.0.4"
-						imagePullPolicy: "Always"
-					}]
-					serviceAccountName: "mariadb-operator"
-				}
-			}
-		}
-		apiVersion: "apps/v1"
-		kind:       "Deployment"
+    output: {
+            apiVersion: "storage.k8s.io/v1"
+            kind:       "StorageClass"
+            metadata: name: parameter.scname
+            provisioner:       parameter.provisioner
+            volumeBindingMode: "WaitForFirstConsumer"
+    }
+	outputs: mariadb{
+	    apiVersion: "apps/v1"
+        kind:       "Deployment"
+        "metadata":{
+                name:      parameter.name
+                namespace: parameter.namespace
+        }
+
+        spec: {
+               replicas: 1
+                selector: matchLabels: name: "mariadb-operator"
+                template: {
+                    metadata: labels: name: "mariadb-operator"
+                    spec: {
+                        containers: [{
+                            name: "mariadb-operator"
+                            env: [{
+                                name: "WATCH_NAMESPACE"
+                                valueFrom: fieldRef: fieldPath: "metadata.namespace"
+                            }, {
+                                name: "POD_NAME"
+                                valueFrom: fieldRef: fieldPath: "metadata.name"
+                            }, {
+                                name:  "OPERATOR_NAME"
+                                value: "mariadb-operator"
+                            }]
+                            command: ["mariadb-operator"]
+                            image: "quay.io/manojdhanorkar/mariadb-operator:v0.0.4"
+                            imagePullPolicy: "Always"
+                        }]
+                        serviceAccountName: "mariadb-operator"
+                    }
+                }
+        }
 	}
-	outputs: {}
-	parameter: {}
+	parameter: {
+	    scname:*"maridb-sc"|string
+        provisioner:*"kubernetes.io/no-provisioner"|string
+
+        name:*"mariadb-operator"|string
+        namespace:*"vela-system" | string
+	}
 }
