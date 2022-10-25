@@ -36,10 +36,10 @@ template: {
                             name: "mariadb-operator"
                             env: [{
                                 name: "WATCH_NAMESPACE"
-                                valueFrom: fieldRef: fieldPath: "metadata.namespace"
+                                valueFrom: fieldRef: fieldPath: parameter.namespace
                             }, {
                                 name: "POD_NAME"
-                                valueFrom: fieldRef: fieldPath: "metadata.name"
+                                valueFrom: fieldRef: fieldPath: parameter.podname
                             }, {
                                 name:  "OPERATOR_NAME"
                                 value: "mariadb-operator"
@@ -56,6 +56,8 @@ template: {
 	parameter: {
 	    scname:*"maridb-sc"|string
         provisioner:*"kubernetes.io/no-provisioner"|string
+
+        podname: *"mariadb-pod"|string
 
         name:*"mariadb-operator"|string
         namespace:*"vela-system" | string
