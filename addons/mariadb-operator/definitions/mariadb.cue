@@ -42,7 +42,7 @@ template: {
                               dataStorageSize: 1Gi
                         }
                     }
-            }
+                }
 	    }
 
 	    "mariadb-pv": {
