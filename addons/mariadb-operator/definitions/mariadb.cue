@@ -39,7 +39,7 @@ template: {
                               rootpwd: "password"
                               size: 1
                               image: 'mariadb/server:10.3'
-                              dataStoragePath: /mnt/data
+                              dataStoragePath: parameter.storagepath
                               dataStorageSize: 1Gi
                         }
                     }
@@ -48,6 +48,7 @@ template: {
 	parameter: {
 	    scname:*"maridb-sc"|string
         provisioner:*"kubernetes.io/no-provisioner"|string
+        storagepath:*"/mnt/mariadbdata"|string
         podname: *"mariadb-pod"|string
         name:*"mariadb-operator"|string
 	}
