@@ -70,16 +70,16 @@ template: {
         }
 
 	parameter: {
-	    scname:*"maridb-sc"|string
-        provisioner:*"kubernetes.io/no-provisioner"|string
-        storagepath:*"/mnt/mariadbdata"|string
+            scname:*"maridb-sc"|string
+            provisioner:*"kubernetes.io/no-provisioner"|string
+            storagepath:*"/mnt/mariadbdata"|string
 
-        pvname:*"mariadb-pv-volume"|string
-        pvcname:*"mariadb-pv-claim"|string
+            pvname:*"mariadb-pv-volume"|string
+            pvcname:*"mariadb-pv-claim"|string
 
-        volumename:*"mariadb-pv-volume"|string
+            volumename:*"mariadb-pv-volume"|string
 
-        podname: *"mariadb-pod"|string
-        name:*"mariadb-operator"|string
+            podname: *"mariadb-pod"|string
+            name:*"mariadb-operator"|string
 	}
 }
