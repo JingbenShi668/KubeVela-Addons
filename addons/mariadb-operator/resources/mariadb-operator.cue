@@ -1,6 +1,6 @@
 package main
 
-redisOperator: {
+mariadbOperator: {
 	name: "mariadb-operator"
 	type: "webservice"
 	properties: {
