@@ -1,22 +1,17 @@
 "mariadb": {
-	alias: ""
-	annotations: {}
-	attributes: workload: definition: {
-		apiVersion: "apps/v1"
-		kind:       "Deployment"
-	}
-	description: ""
-	labels: {}
-	type: "component"
+	alias: "mariadb"
+    	annotations: {}
+    	attributes: {}
+    	description: "Mariadb represents a mariadb server"
+    	labels: {}
+    	type: "component"
 }
 
 template: {
     output: {
-            apiVersion: "storage.k8s.io/v1"
-            kind:       "StorageClass"
+            apiVersion: "apiextensions.k8s.io/v1"
+            kind:       "MariaDB"
             metadata: name: parameter.scname
-            provisioner:       parameter.provisioner
-            volumeBindingMode: "WaitForFirstConsumer"
     }
 	outputs:
 	    "mariadb-demo":{
