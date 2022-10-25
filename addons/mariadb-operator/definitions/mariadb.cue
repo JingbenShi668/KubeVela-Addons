@@ -20,8 +20,8 @@ template: {
     }
 	outputs:
 	    "mariadb":{
-            apiVersion: "apps/v1"
-            kind:       "Deployment"
+            apiVersion: "mariadb.persistentsys/v1alpha1"
+            kind:       "MariaDB"
             "metadata":{
                     name:      parameter.name
                     namespace: parameter.namespace
@@ -57,9 +57,7 @@ template: {
 	parameter: {
 	    scname:*"maridb-sc"|string
         provisioner:*"kubernetes.io/no-provisioner"|string
-
         podname: *"mariadb-pod"|string
-
         name:*"mariadb-operator"|string
 	}
 }
