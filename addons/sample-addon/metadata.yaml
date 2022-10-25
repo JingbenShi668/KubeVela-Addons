@@ -1,7 +1,0 @@
-description: An addon for KubeVela.
-icon: ""
-invisible: false
-name: sample-addon
-tags:
-- my-tag
-version: 1.0.0
