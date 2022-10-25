@@ -33,23 +33,14 @@ template: {
                     template: {
                         metadata: labels: name: "mariadb-operator"
                         spec: {
-                            containers: [{
-                                name: "mariadb-operator"
-                                env: [{
-                                    name: "WATCH_NAMESPACE"
-                                    valueFrom: fieldRef: fieldPath: parameter.namespace
-                                }, {
-                                    name: "POD_NAME"
-                                    valueFrom: fieldRef: fieldPath: parameter.podname
-                                }, {
-                                    name:  "OPERATOR_NAME"
-                                    value: "mariadb-operator"
-                                }]
-                                command: ["mariadb-operator"]
-                                image: "quay.io/manojdhanorkar/mariadb-operator:v0.0.4"
-                                imagePullPolicy: "Always"
-                            }]
-                            serviceAccountName: "mariadb-operator"
+                              database: "test-db"
+                              username: "db-user"
+                              password: "db-user"
+                              rootpwd: "password"
+                              size: 1
+                              image: 'mariadb/server:10.3'
+                              dataStoragePath: /mnt/data
+                              dataStorageSize: 1Gi
                         }
                     }
             }
