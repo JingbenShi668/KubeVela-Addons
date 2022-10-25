@@ -1,7 +1,10 @@
-description: An addon for KubeVela.
-icon: ""
-invisible: false
 name: mariadb-operator
+description: Maraidb operator enables you to create MariaDB server and database easily by defining simple Custom Resource.
 tags:
-- my-tag
-version: 1.0.0
+  - maraidb
+version: 0.0.4
+url: https://github.com/abalki001/mariadb-operator
+
+system:
+  vela: ">=v1.5.0"
+  kubernetes: ">=1.19"

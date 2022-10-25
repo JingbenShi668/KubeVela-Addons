@@ -1,10 +1,7 @@
-// parameter.cue is used to store addon parameters.
-//
-// You can use these parameters in template.cue or in resources/ by 'parameter.myparam'
-//
-// For example, you can use parameters to allow the user to customize
-// container images, ports, and etc.
 parameter: {
-	// +usage=Custom parameter description
-	myparam: *"myns" | string
+	//+usage=Redis Operator image.
+    image: *"quay.io/manojdhanorkar/mariadb-operator:v0.0.4" | string
+    //+usage=Namespace to deploy to, defaults to vela-system
+    namespace?: *"vela-system" | string
 }
+
