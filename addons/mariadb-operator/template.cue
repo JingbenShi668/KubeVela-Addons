@@ -1,6 +1,6 @@
 package main
 
-_targetNamespace: *"vela-system" | string
+_targetNamespace: *"mariadb-operator" | string
 if parameter.namespace != _|_ {
 	_targetNamespace: parameter.namespace
 }
