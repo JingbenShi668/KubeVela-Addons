@@ -8,11 +8,6 @@
 }
 
 template: {
-    output: {
-            apiVersion: "apiextensions.k8s.io/v1"
-            kind:       "MariaDB"
-            metadata: name: parameter.scname
-    }
 	outputs:
 	    "mariadb-demo":{
             apiVersion: "mariadb.persistentsys/v1alpha1"
