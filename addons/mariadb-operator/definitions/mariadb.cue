@@ -42,34 +42,33 @@ template: {
               spec: {
                       storageClassName: parameter.storagename
                       accessModes: ["ReadWriteOnce"]
-                      capacity: storage: parameter.storage
+                      capacity: storage: parameter.storagecapacity
                       hostPath: path:    "/mnt/mariadb-data"
               }
         }
 
-        "mariadb-pv": {
+        "mariadb-pvc": {
               apiVersion: "v1"
               kind:       "PersistentVolumeClaim"
               metadata: name: parameter.pvcname
               spec: {
                       storageClassName: parameter.storagename
                       accessModes: ["ReadWriteOnce"]
-                      capacity: storage: parameter.storage
+                      capacity: storage: parameter.storagecapacity
                       volumeName: parameter.volumename
               }
         }
 
 	parameter: {
-            storagename:*"maridb-sc"|string
-            provisioner:*"kubernetes.io/no-provisioner"|string
+	        name:*"mariadb-operator"|string
+            namespace:*"mariadb-namespace"|string
+
             storagepath:*"/mnt/mariadbdata"|string
+            storagename:*"maridb-sc"|string
+            storagecapacity:*"1Gi"|string
 
             pvname:*"mariadb-pv-volume"|string
             pvcname:*"mariadb-pv-claim"|string
-
             volumename:*"mariadb-pv-volume"|string
-
-            podname: *"mariadb-pod"|string
-            name:*"mariadb-operator"|string
 	}
 }

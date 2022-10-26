@@ -1,6 +1,6 @@
 package main
 
-_targetNamespace: *"mariadb-operator" | string
+_targetNamespace: *"mariadb-namespace" | string
 if parameter.namespace != _|_ {
 	_targetNamespace: parameter.namespace
 }
